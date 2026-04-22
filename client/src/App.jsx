@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addTask, deleteTask, updateStatus } from "./features/tasks/taskSlice";
+import { SegmentedControl } from "@mantine/core";
+import classes from "./GradientSegmentedControl.module.css";
 
 export default function App() {
   const [task, setTask] = useState({
@@ -8,10 +10,11 @@ export default function App() {
     dueDate: "",
   });
 
+  const [theme, setTheme] = useState("dark");
+
   const tasks = useSelector((state) => state.tasks.items);
 
   const dispatch = useDispatch();
-
   const handleChange = (e) => {
     const { name, value } = e.target;
     setTask((prev) => ({
@@ -43,59 +46,102 @@ export default function App() {
   };
 
   return (
-    <main className="bg-[#0a0f2c] max-w-full min-h-screen px-8 py-2">
-      <div className="flex items-center gap-3 mb-6">
-        <img
-          src="/doora.png"
-          alt="Doora Logo"
-          className="w-32 h-32 object-contain"
-        />
+    <main
+      className={`max-w-full min-h-screen px-8 py-2 transition-colors duration-300 ${
+        theme === "dark" ? "bg-[#0a0f2c] text-white" : "bg-white text-black"
+      }`}
+    >
+      <div className="flex items-center justify-between  mb-6 px-4">
+        <div className="flex  items-center">
+          <img
+            src="/doora.png"
+            alt="Doora Logo"
+            className="w-32 h-32 object-contain"
+          />
+          <h1 className="text-3xl text-lime-400 font-bold">TaskBoard</h1>{" "}
+        </div>
 
-        <h1 className="text-pink-50 text-4xl font-bold">TaskBoard</h1>
+        <SegmentedControl
+          value={theme}
+          onChange={setTheme}
+          data={[
+            { label: "🌙 Dark", value: "dark" },
+            { label: "☀️ Light", value: "light" },
+          ]}
+          radius="xl"
+          size="md"
+          classNames={classes}
+        />
       </div>
 
       <section
-        className="p-6 w-full rounded-2xl border border-indigo-500/40 
-bg-linear-to-r froDatem-gray-800/60 to-gray-900/60 backdrop-blur-md shadow-lg"
+        className={`p-6 w-full rounded-2xl  transition-all duration-300 border-2 ${
+          theme === "dark"
+            ? "bg-linear-to-r from-gray-800/70 to-gray-900/60  border-indigo-500 backdrop-blur-md shadow-indigo-900/20"
+            : "bg-linear-to-r from-white to-indigo-50 border-indigo-200 shadow-md"
+        }
+`}
       >
-        <h1 className="text-xl mb-5 text-white font-semibold">Add New Task</h1>
+        <h1
+          className={`text-xl mb-5 font-semibold ${
+            theme === "dark" ? "text-white" : "text-gray-800"
+          }`}
+        >
+          Add New Task
+        </h1>
 
         <div className="flex items-end gap-5 flex-wrap">
           <div className="flex flex-col flex-1 min-w-60">
-            <label className="text-sm text-gray-300 mb-2">Task Name</label>
+            <label
+              className={`text-sm mb-2 ${
+                theme === "dark" ? "text-gray-300" : "text-gray-600"
+              }`}
+            >
+              Task Name
+            </label>
+
             <input
               type="text"
               name="name"
               value={task.name}
               onChange={handleChange}
               placeholder="Enter task name..."
-              className="px-4 py-2 rounded-lg 
-        bg-gray-900/70 border border-gray-700 
-        text-white focus:outline-none focus:border-indigo-400
-        focus:ring-2 focus:ring-indigo-500/30 transition"
+              className={`px-4 py-2 rounded-lg border transition-all outline-none ${
+                theme === "dark"
+                  ? "bg-gray-900 border-gray-700 text-white focus:border-indigo-400 focus:ring-2 focus:ring-indigo-500/30"
+                  : "bg-white border-gray-300 text-black focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20"
+              }`}
             />
           </div>
 
+          {/* Due Date */}
           <div className="flex flex-col flex-1 min-w-60">
-            <label className="text-sm text-gray-300 mb-2">Due Date</label>
+            <label
+              className={`text-sm mb-2 ${
+                theme === "dark" ? "text-gray-300" : "text-gray-600"
+              }`}
+            >
+              Due Date
+            </label>
+
             <input
               type="date"
               name="dueDate"
               value={task.dueDate}
               onChange={handleChange}
-              className="px-4 py-2 rounded-lg 
-        bg-gray-900/70 border border-gray-700 
-        text-white focus:outline-none focus:border-indigo-400
-        focus:ring-2 focus:ring-indigo-500/30 transition"
+              className={`px-4 py-2 rounded-lg border transition-all outline-none ${
+                theme === "dark"
+                  ? "bg-gray-900 border-gray-700 text-white focus:border-indigo-400 focus:ring-2 focus:ring-indigo-500/30"
+                  : "bg-white border-gray-300 text-black focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20"
+              }`}
             />
           </div>
 
           <button
             onClick={handleAddTask}
-            className="px-5 py-2 h-11 rounded-lg 
-      bg-indigo-600 hover:bg-indigo-500 
-      text-white font-medium transition 
-      shadow-md hover:shadow-indigo-500/30 cursor-pointer"
+            className={`px-5 py-2 h-11 rounded-lg 
+              bg-indigo-600 hover:bg-indigo-500 text-white shadow-md hover:shadow-indigo-500/30 hover:shadow-indigo-500/30"
+              cursor-pointer`}
           >
             + Add Task
           </button>
@@ -103,33 +149,49 @@ bg-linear-to-r froDatem-gray-800/60 to-gray-900/60 backdrop-blur-md shadow-lg"
       </section>
 
       <section className="mt-6 w-full">
-        <h1 className="text-white text-3xl mb-4 font-semibold">My Tasks</h1>
+        <h1
+          className={`text-3xl mb-6 font-bold ${
+            theme === "dark" ? "text-white" : "text-gray-800"
+          }`}
+        >
+          My Tasks
+        </h1>
 
         <div className="flex gap-6">
-          <div className="flex-1 bg-yellow-500/20 border border-yellow-500 rounded-xl p-4">
-            <h3 className="text-xl mb-4 text-yellow-300 font-bold">Todo</h3>
+          <div
+            className={`flex-1 rounded-2xl p-5 border ${
+              theme === "dark"
+                ? "bg-yellow-500/10 border-yellow-500/30"
+                : "bg-yellow-100 border-yellow-300"
+            }`}
+          >
+            <h3 className="text-xl mb-4 text-yellow-500 font-bold">Todo</h3>
 
             {tasks
               .filter((t) => t.status === "todo")
               .map((task) => (
                 <div
                   key={task.id}
-                  className="bg-yellow-600 p-4 rounded-lg mb-3 text-white"
+                  className={`p-4 rounded-xl mb-3 transition hover:scale-[1.02] ${
+                    theme === "dark"
+                      ? "bg-yellow-600 text-white shadow-md"
+                      : "bg-white text-gray-800 shadow-sm"
+                  }`}
                 >
                   <h3 className="text-lg font-semibold">{task.name}</h3>
-                  <p className="text-sm text-gray-300">Due {task.dueDate}</p>
+                  <p className="text-sm opacity-70 mb-3 ">Due {task.dueDate}</p>
 
                   <div className="flex gap-2 mt-3">
                     <button
                       onClick={() => handleStatusChange(task.id, "in-progress")}
-                      className="px-2 py-1 bg-blue-600 rounded text-sm cursor-pointer"
+                      className="px-3 py-1 bg-blue-500 hover:bg-blue-400 text-white rounded-md text-xs"
                     >
                       Move to Progress
                     </button>
 
                     <button
                       onClick={() => handleDelete(task.id)}
-                      className="px-2 py-1 bg-red-600 rounded text-sm cursor-pointer"
+                      className="px-3 py-1 bg-red-500 hover:bg-red-400 text-white rounded-md text-xs"
                     >
                       Delete
                     </button>
@@ -138,8 +200,16 @@ bg-linear-to-r froDatem-gray-800/60 to-gray-900/60 backdrop-blur-md shadow-lg"
               ))}
           </div>
 
-          <div className="flex-1 bg-blue-500/20 border border-blue-500 rounded-xl p-4">
-            <h3 className="text-xl mb-4 text-blue-300 font-bold">
+          <div
+            className={`flex-1 rounded-2xl p-5 border ${
+              theme === "dark"
+                ? "bg-blue-500/10 border-blue-500/30"
+                : "bg-blue-100 border-blue-300"
+            }`}
+          >
+            <h3
+              className={`text-xl mb-4 ${theme === "dark" ? "text-blue-300" : "text-blue-500"} font-bold`}
+            >
               In Progress
             </h3>
 
@@ -148,22 +218,26 @@ bg-linear-to-r froDatem-gray-800/60 to-gray-900/60 backdrop-blur-md shadow-lg"
               .map((task) => (
                 <div
                   key={task.id}
-                  className="bg-blue-800 p-4 rounded-lg mb-3 text-white"
+                  className={`p-4 rounded-xl mb-3 transition hover:scale-[1.02] ${
+                    theme === "dark"
+                      ? "bg-blue-700 text-white shadow-md"
+                      : "bg-white text-gray-800 shadow-sm"
+                  }`}
                 >
-                  <h3 className="text-lg font-semibold">{task.name}</h3>
-                  <p className="text-sm text-gray-300">Due {task.dueDate}</p>
+                  <h3 className="font-semibold">{task.name}</h3>
+                  <p className="text-sm opacity-70 mb-3">Due {task.dueDate}</p>
 
-                  <div className="flex gap-2 mt-3">
+                  <div className="flex gap-2">
                     <button
                       onClick={() => handleStatusChange(task.id, "done")}
-                      className="px-2 py-1 bg-green-600 rounded text-sm cursor-pointer"
+                      className="px-3 py-1 bg-green-500 hover:bg-green-400 text-white rounded-md text-xs"
                     >
-                      Mark Done
+                      Done
                     </button>
 
                     <button
                       onClick={() => handleDelete(task.id)}
-                      className="px-2 py-1 bg-red-600 rounded text-sm cursor-pointer"
+                      className="px-3 py-1 bg-red-500 hover:bg-red-400 text-white rounded-md text-xs"
                     >
                       Delete
                     </button>
@@ -172,30 +246,44 @@ bg-linear-to-r froDatem-gray-800/60 to-gray-900/60 backdrop-blur-md shadow-lg"
               ))}
           </div>
 
-          <div className="flex-1 bg-green-500/20 border border-green-500 rounded-xl p-4">
-            <h3 className="text-xl mb-4 text-green-300 font-bold">Done</h3>
+          <div
+            className={`flex-1 rounded-2xl p-5 border ${
+              theme === "dark"
+                ? "bg-green-500/10 border-green-500/30"
+                : "bg-green-100 border-green-300"
+            }`}
+          >
+            <h3
+              className={`text-xl mb-4 ${theme === "dark" ? "text-green-300" : "text-green-600"} font-bold`}
+            >
+              Done
+            </h3>
 
             {tasks
               .filter((t) => t.status === "done")
               .map((task) => (
                 <div
                   key={task.id}
-                  className="bg-green-800 p-4 rounded-lg mb-3 text-white"
+                  className={`p-4 rounded-xl mb-3 transition hover:scale-[1.02] ${
+                    theme === "dark"
+                      ? "bg-green-800 text-white shadow-md"
+                      : "bg-white text-gray-800 shadow-sm"
+                  }`}
                 >
                   <h3 className="text-lg font-semibold">{task.name}</h3>
-                  <p className="text-sm text-gray-300">Due {task.dueDate}</p>
+                  <p className="text-sm opacity-70 mb-3">Due {task.dueDate}</p>
 
                   <div className="flex gap-2 mt-3">
                     <button
                       onClick={() => handleStatusChange(task.id, "todo")}
-                      className="px-2 py-1 bg-yellow-600 rounded text-sm"
+                      className="px-3 py-1 bg-yellow-500 hover:bg-yellow-400 text-white rounded-md text-xs"
                     >
-                      Move Back
+                      Back
                     </button>
 
                     <button
                       onClick={() => handleDelete(task.id)}
-                      className="px-2 py-1 bg-red-600 rounded text-sm"
+                      className="px-3 py-1 bg-red-500 hover:bg-red-400 text-white rounded-md text-xs"
                     >
                       Delete
                     </button>
