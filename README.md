@@ -90,7 +90,7 @@ Provides a better user experience across environments.
 
 ---
 
-# 🎨 UI Highlights
+# UI Highlights
 
 * Responsive layout
 * Modern dashboard design
@@ -100,7 +100,7 @@ Provides a better user experience across environments.
 
 ---
 
-# 🛠️ Installation
+# Installation
 
 ## Clone Repository
 
